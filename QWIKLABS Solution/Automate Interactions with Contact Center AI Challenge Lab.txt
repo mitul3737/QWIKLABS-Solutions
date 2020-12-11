@@ -1,0 +1,41 @@
+git clone https://github.com/GoogleCloudPlatform/dataflow-contact-center-speech-analysis.git
+
+
+ls
+cd dataflow-contact-center-speech-analysis/
+ls
+cd saf-longrun-job-dataflow/
+python -m virtualenv env -p python3
+source env/bin/activate
+pip install apache-beam[gcp]
+pip install dateparser
+
+export PROJECT_ID=
+python3 saflongrunjobdataflow.py --project=$PROJECT_ID --region=us-central1 --input_topic=projects/$PROJECT_ID/topics/long-running --runner=DataflowRunner --temp_location=gs://$PROJECT_ID/DFaudio/tmp --output_bigquery=lab.scripts --requirements_file="requirements.txt"
+
+
+
+gsutil -h x-goog-meta-dlp:false -h x-goog-meta-callid:1234567 -h x-goog-meta-stereo:false -h x-goog-meta-pubsubtopicname:long-running -h x-goog-meta-year:2019 -h x-goog-meta-month:11 -h x-goog-meta-day:06 -h x-goog-meta-starttime:1116 cp gs://qwiklabs-bucket-gsp311/speech_commercial_mono.flac gs://$PROJECT_ID
+
+gsutil -h x-goog-meta-dlp:false -h x-goog-meta-callid:1234567 -h x-goog-meta-stereo:true -h x-goog-meta-pubsubtopicname:long-running -h x-goog-meta-year:2019 -h x-goog-meta-month:11 -h x-goog-meta-day:06 -h x-goog-meta-starttime:1116 cp gs://qwiklabs-bucket-gsp311/speech_commercial_stereo.wav gs://$PROJECT_ID
+
+
+
+SELECT
+  *
+FROM (
+  SELECT
+    entities.name,
+    entities.type,
+    COUNT(entities.name) AS count
+  FROM
+    `[YOUR_PROJECT_ID].lab.scripts`,
+    UNNEST(entities) entities
+  GROUP BY
+    entities.name,
+    entities.type
+  ORDER BY
+    count DESC )
+
+
+
