@@ -1,0 +1,27 @@
+--Done by Mitul--
+
+Task 1:
+
+export PROJECT=qwiklabs-gcp-03-891b116131bc
+
+
+
+Task 4:
+
+ls
+
+export GOOGLE_APPLICATION_CREDENTIALS=key.json
+
+python3 analyze-images.py $DEVSHELL_PROJECT_ID $DEVSHELL_PROJECT_ID
+
+
+
+
+
+
+
+###################
+analyze-images.py file download link:  https://drive.google.com/file/d/1KQeDgAJ-5Xj2Vy7Wr9kWAC7go-TmA2On/view
+
+
+
